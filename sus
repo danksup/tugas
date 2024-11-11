@@ -1,0 +1,239 @@
+# Nama File   = tugas.py
+# Nama        = Agung Rama Pramana Putra
+# Nim         = 24060124120007
+# Tanggal     = 10 November 2024
+
+from list import *
+
+#DEFINISI DAN SPESIFIKASI OPERASI LIST YANG DIPERLUKAN UNTUK HIMPUNAN
+# Rember: elemen, list -> list
+# Rember(x,L) menghapus sebuah elemen x dari list L
+# Jika x ada di list L, maka elemen L berkurang 1.
+# Jika x tidak ada di list L maka L tetap.
+# List kosong tetap menjadi list kosong.
+# Realisasi
+def Rember(e,L):
+    if IsEmpty(L):
+        return L
+    else:
+        if FirstElmt(L) == e:
+            return Tail(L)
+        else:
+            return Konso(FirstElmt(L), Rember(e,Tail(L)))
+print(Rember(1,[1,1,1,2,2,3,4,4,4,5,7,7,7,6,6,8]))
+
+def Rember2(e, L):
+    if IsEmpty(L):
+        return L
+    else:
+        if LastElmt(L) == e:
+            return Head(L)
+        else:
+            return Konsi(Rember2(e, Head(L)), LastElmt(L))
+
+print(Rember2(1,[1,1,1,2,2,3,4,4,4,5,7,7,7,6,6,8]))
+
+# MultiRember: elemen, list -> list
+# MultiRember(x,L) menghapus semua kemunculan elemen x dari list L.
+# List baru yang dihasilkan tidak lagi memiliki elemen x.
+# List kosong tetap menjadi list kosong.
+# Realisasi
+def MultiRember(e,L):
+    if IsEmpty(L):
+        return L
+    else:
+        if FirstElmt(L) == e:
+            return MultiRember(e, Tail(L))
+        else:
+            return Konso(FirstElmt(L), MultiRember(e,Tail(L)))
+print(MultiRember(1,[1,1,1,2,2,3,4,4,4,5,7,7,7,6,6,8]))
+
+#DEFINISI DAN SPESIKASI KONSTRUKTOR SET DARI LIST
+# MakeSet: list -> set
+# MakeSet(L) membuat set dari list L dengan menghapus semua kemunculan lebih dari satu kali
+# list kosong tetap menjadi himpunan kosong
+# Realisasi
+def MakeSet(L):
+    if IsEmpty(L):
+        return L
+    else:
+        if IsMember(FirstElmt(L), Tail(L)):
+            return MakeSet(Tail(L))
+        else:
+            return Konso(FirstElmt(L), MakeSet(Tail(L)))
+
+def MakeSet2(L):
+    if IsEmpty(L):
+        return []
+    else:
+        return Konso(FirstElmt(L), MakeSet2(MultiRember(FirstElmt(L), Tail(L))))  
+
+#DEFINISI DAN SPESIKASI KONSTRUKTOR SET
+# KonsoSet: elemen,set -> set
+# konsoSet(e,H) menambahkan sebuah elemen e sebagai elemen pertama set H
+# dengan syarat e belum ada di dalam himpunan H
+# Realisasi   
+def KonsoSet(e, H):
+    if IsMember(e, H): 
+        return H
+    else:
+        return Konso(e, H)
+print(KonsoSet(5, [1,2,3]))
+
+#DEFINISI DAN SPESIFIKASI PREDIKAT
+# IsSet: list -> boolean
+# IsSet(L) mengembalikan true jika L adalah sebuah set
+# Realisasi
+def IsSet(L):
+    if IsEmpty(L):
+        return True
+    else:
+        if IsMember(FirstElmt(L), Tail(L)):
+            return False
+        else:
+            return IsSet(Tail(L))
+print(IsSet([1,2,3,3]))
+
+# IsSubset: 2 set -> boolean
+# IsSubset(H1,H2) mengembalikan true jika H1 merupakan subset dari H2
+# Realisasi
+def IsSubset(H1,H2):
+    if IsEmpty(H1):
+        return True
+    else:
+        if not IsMember(FirstElmt(H1), H2):
+            return False
+        else:
+            return IsSubset(Tail(H1),H2)
+
+print(IsSubset([1,2], [1,2,3,4,5]))
+
+# IsEqualSet: 2 set -> boolean
+# IsEqualSet(H1,H2} benar jika H1 adalah set yang sama dengan H2
+# Realisasi
+def IsEqualSet(H1, H2):
+    return IsSubset(H1, H2) and IsSubset(H2, H1)
+print(IsEqualSet([1,2], [1,2]))
+
+# IsEqualSet: List, List -> Boolean
+# IsEqualSet(H1, H2) benar jika set H1 sama dengan set H2
+#Realisasai
+def IsEqualSet(H1, H2):
+    if IsEmpty(H1) and IsEmpty(H2):
+        return True
+    elif IsEmpty(H1) or IsEmpty(H2):
+        return False
+    elif IsMember(FirstElmt(H1), H2) and IsMember(FirstElmt(H2), H1):
+        return IsEqualSet(Tail(H1), Tail(H2))
+    else:
+        return False
+print(IsEqualSet([1, 2, 3], [1,2,3]))
+
+# IsIntersect: 2 set -> boolean
+# IsIntersect(H1,H2) benar jika H1 beririsan dengan H2
+#Realisasi
+def IsIntersect(H1,H2):
+    if IsEmpty(H1) and IsEmpty(H2):
+        return False
+    elif not IsEmpty(H1) and IsEmpty(H2):
+        return False
+    elif IsEmpty(H1) and not IsEmpty(H2):
+        return False
+    elif not IsEmpty(H1) and not IsEmpty(H2):
+        return IsMember(FirstElmt(H1), H2) or IsIntersect(Tail(H1), H2)
+print(IsIntersect([1,2,3], [2,3,4]))
+
+#DEFINISI DAN SPESIFIKASI OPERASI TERHADAP HIMPUNAN
+# MakeIntersect: 2 set -> set
+# MakeIntersect(H1,H2) menghasilkan set baru yang merupakan hasil irisan antara H1 dan H2
+# Realisasi
+def MakeIntersect(H1, H2):
+    if IsEmpty(H1) and IsEmpty(H2):
+        return []
+    elif not IsEmpty(H1) and IsEmpty(H2):
+        return []
+    elif IsEmpty(H1) and not IsEmpty(H2):
+        return []
+    elif not IsEmpty(H1) and not IsEmpty(H2):
+        if IsMember(FirstElmt(H1), H2):
+            return Konso(FirstElmt(H1), MakeIntersect(Tail(H1), H2))
+        else:
+            return MakeIntersect(Tail(H1), H2)
+print(MakeIntersect([1,2,3], [3,4,5]))
+
+def MakeIntersect2(H1, H2):
+    if IsEmpty(H2) and IsEmpty(H1):
+        return []
+    elif not IsEmpty(H2) and IsEmpty(H1):
+        return []
+    elif IsEmpty(H2) and not IsEmpty(H1):
+        return []
+    elif not IsEmpty(H2) and not IsEmpty(H1):
+        if IsMember(FirstElmt(H2), H1):
+            return Konso(FirstElmt(H2), MakeIntersect2(Tail(H2), H1))
+        else:
+            return MakeIntersect2(Tail(H2), H1)
+print(MakeIntersect2([1,4,3], [3,4,5]))
+
+# MakeUnion: 2 set -> set
+# MakeUnion(H1,H2) menghasilkan set baru yang merupakan hasil gabungan antara H1 dan H2
+# Realisasi
+def MakeUnion(H1, H2):
+    if IsEmpty(H1) and IsEmpty(H2):
+        return []
+    elif not IsEmpty(H1) and IsEmpty(H2):
+        return H1
+    elif IsEmpty(H1) and not IsEmpty(H2):
+        return H2
+    elif not IsEmpty(H1) and not IsEmpty(H2):
+        if IsMember(FirstElmt(H1), H2):
+           return MakeUnion(Tail(H1), H2)
+        else:
+            return Konso(FirstElmt(H1), MakeUnion(Tail(H1), H2))
+print(MakeUnion([2,3,4], [4,5,6]))
+
+def MakeUnion2(H1, H2):
+    if IsEmpty(H1) and IsEmpty(H2):
+        return []
+    elif not IsEmpty(H2) and IsEmpty(H1):
+        return H2
+    elif IsEmpty(H2) and not IsEmpty(H1):
+        return H1
+    elif not IsEmpty(H1) and not IsEmpty(H2):
+        if IsMember(FirstElmt(H2), H1):
+            return MakeUnion2(H1, Tail(H2)) 
+        else:
+            return Konso(FirstElmt(H2), MakeUnion2(H1, Tail(H2))) 
+print(MakeUnion2([2,3,4], [4,5,6]))
+
+# NBIntersect: 2 set -> integer
+# NBIntersect(H1,H2) menghasilkan jumlah elemen yang 
+# Realisasi
+def NBIntersect(H1,H2):
+    if IsEmpty(H1) or IsEmpty(H2):
+        return 0
+    elif not IsEmpty(H1) and not IsEmpty(H2):
+        if IsMember(FirstElmt(H1), H2):
+            return FirstElmt(H1) + NBIntersect(Tail(H1), H2)
+        else:
+            return NBIntersect(Tail(H1), H2)
+print(NBIntersect([3,2,4], [3,4,5]))
+
+# NBUnion: 2 set -> integer
+# NBUnion(H1,H2) menghasilkan jumlah elemen hasil gabungan antara H1 dan H2
+# tanpa memanfaatkan fungsi MakeUnion(H1,H2).
+# Realisasi
+def NBUnion(H1, H2):
+    if IsEmpty(H1):  
+        return SumElmt(H2)
+    elif IsMember(FirstElmt(H1), H2): 
+        return NBUnion(Tail(H1), H2)
+    else:  
+        return FirstElmt(H1) + NBUnion(Tail(H1), H2)
+print(NBUnion([2, 3, 4], [4, 5, 6])) 
+
+#Realisasi
+print(MakeSet([1,2,2,3,3]))
+print(MakeSet(['apel', 'sirsak', 'per', 'mangga', 'apel', 'jeruk', 'sirsak']))
+print(MakeSet2([1,2,2,3,3]))
+print(MakeSet2(['apel', 'sirsak', 'per', 'mangga', 'apel', 'jeruk', 'sirsak']))
